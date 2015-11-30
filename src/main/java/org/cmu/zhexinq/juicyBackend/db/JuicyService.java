@@ -20,18 +20,23 @@ public class JuicyService {
     private final static String FAIL_TO_CREATE_RESP = "fail to persist data according to request";
     
     // return upcoming events 
-    // JSON -> {id, eventDateTime, imgUri, creatorEmail, name, description, lon, lat, followers}
+    // JSON -> {id, eventDateTime, imgId, creatorEmail, name, description, lon, lat, followers, ImgStr}
     public synchronized String getUpcomingEventsByEmail(String email) {
     	ArrayList<Long> eventIds = adapter.readEventListByEmailOrderByTime(email);
     	JSONArray eventList = new JSONArray();
-    	JSONObject eventAndFollower;
+    	JSONObject eventFollowerImage;
     	long count;
     	
 		for (Long i : eventIds) {
-			eventAndFollower = adapter.readEvent(i);
+			// add follower count to the event list json response
+			eventFollowerImage = adapter.readEvent(i);
 			count = adapter.readEventFollowers(i);
-			eventAndFollower.put("followers", count);
-			eventList.add(eventAndFollower);
+			eventFollowerImage.put("followers", count);
+			// add image to the event list json 
+			long imgId = (Long) eventFollowerImage.get("imgId");
+			String imgStr = adapter.readImage(imgId);
+			eventFollowerImage.put("imgStr", imgStr);
+			eventList.add(eventFollowerImage);
 		}
 		return eventList.toString();
     }
@@ -117,10 +122,20 @@ public class JuicyService {
 	    	// search for events within specified distance
 	    	ArrayList<Long> eventIds = adapter.readEventListByGeoOrderByTime(lat, lon, dist);
 	    	JSONArray eventList = new JSONArray();
+	    	JSONObject eventFollowerImage;
+	    	long count;
 	    	for (Long id : eventIds) {
-	    		eventList.add(adapter.readEvent(id));
+	    		// add follower count to the event list json response
+				eventFollowerImage = adapter.readEvent(id);
+				count = adapter.readEventFollowers(id);
+				eventFollowerImage.put("followers", count);
+				// add image to the event list json 
+				long imgId = (Long) eventFollowerImage.get("imgId");
+				String imgStr = adapter.readImage(imgId);
+				eventFollowerImage.put("imgStr", imgStr);
+				eventList.add(eventFollowerImage);
 	    	}
-	    	return eventList.toJSONString();	
+	    	return eventList.toString();	
     	} catch (NullPointerException e) {
     		e.printStackTrace();
     		return WRONG_INPUT_SPEC_RESP;

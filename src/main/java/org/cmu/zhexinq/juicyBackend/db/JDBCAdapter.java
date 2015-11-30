@@ -15,6 +15,7 @@ import java.util.ArrayList;
  * eventUser -> (eventId, usrEmail)
  * Created by qiuzhexin on 11/25/15.
  */
+@SuppressWarnings("unchecked")
 public class JDBCAdapter {
     private Connection connection;
     private Statement statement;

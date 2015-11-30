@@ -16,7 +16,6 @@ import org.apache.commons.codec.binary.Base64;
  */
 public class Utility {
 	
-	
     // compute the distance of a pair of (lat, lon) (in meters)
     public static double computeDistanceUsingGeoLoc(double lat1, double lon1,
                                              double lat2, double lon2) {
