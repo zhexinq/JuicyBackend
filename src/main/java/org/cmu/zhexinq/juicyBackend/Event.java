@@ -37,6 +37,14 @@ public class Event {
 		return service.createEventFromJSON(jsonStr);
 	}
 	
+	@Path("join")
+	@POST
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String joinEvent(String jsonStr) {
+		return service.setUserJoinEventFromJSON(jsonStr);
+	}
+	
 	
 	
 	

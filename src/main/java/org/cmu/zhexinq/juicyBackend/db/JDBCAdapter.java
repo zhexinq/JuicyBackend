@@ -83,16 +83,16 @@ public class JDBCAdapter {
     
     /* image table operations */
     // insert an image to the DB, and return its id, -1 if failed
-    public int insertImage(String imageStr) {
+    public long insertImage(String imageStr) {
     	try {
     		preparedStatement = connection.prepareStatement("INSERT INTO image (content) VALUES (?)");
     		preparedStatement.setString(1, imageStr);
-    		int count = preparedStatement.executeUpdate();
+    		long count = preparedStatement.executeUpdate();
     		preparedStatement = connection.prepareStatement("SELECT MAX(id) AS id FROM image");
     		resultSet = preparedStatement.executeQuery();
     		resultSet.next();
     		if (resultSet != null)
-    			return resultSet.getInt("id");
+    			return resultSet.getLong("id");
             System.out.println("Insert count: " + count);
             System.out.println(preparedStatement.toString());
         } catch (SQLException e) {
@@ -111,11 +111,11 @@ public class JDBCAdapter {
     }
     
     // read an image from DB as String
-    public String readImage(int id) {
+    public String readImage(long id) {
     	String result = null;
     	try {
     		preparedStatement = connection.prepareStatement("SELECT content FROM image WHERE id=?");
-    		preparedStatement.setInt(1, id);
+    		preparedStatement.setLong(1, id);
     		resultSet = preparedStatement.executeQuery();
     		resultSet.next();
     		if (resultSet != null) {
@@ -140,14 +140,14 @@ public class JDBCAdapter {
     
     /* user table operations */
     // insert a user row
-    public void insertUser(String email, String name, String passwd, int imgId) {
+    public void insertUser(String email, String name, String passwd, long imgId) {
         try {
             preparedStatement = connection.prepareStatement("INSERT INTO user VALUES (?, ?, ?, ?)");
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, name);
             preparedStatement.setString(3, passwd);
-            preparedStatement.setInt(4, imgId);
-            int count = preparedStatement.executeUpdate();
+            preparedStatement.setLong(4, imgId);
+            long count = preparedStatement.executeUpdate();
             System.out.println("Insert count: " + count);
             System.out.println(preparedStatement.toString());
         } catch (SQLException e) {
@@ -165,15 +165,15 @@ public class JDBCAdapter {
     }
 
     // update a user row
-    public void updateUser(String email, String name, String passwd, int imgId) {
+    public void updateUser(String email, String name, String passwd, long imgId) {
         try {
             preparedStatement = connection.prepareStatement("UPDATE user SET email=?,name=?,passwd=?,imgId=? WHERE email=?");
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, name);
             preparedStatement.setString(3, passwd);
-            preparedStatement.setInt(4, imgId);
+            preparedStatement.setLong(4, imgId);
             preparedStatement.setString(5, email);
-            int count = preparedStatement.executeUpdate();
+            long count = preparedStatement.executeUpdate();
             System.out.println("update count: " + count);
             System.out.println(preparedStatement.toString());
         } catch (SQLException e) {
@@ -201,11 +201,12 @@ public class JDBCAdapter {
             if (resultSet != null) {
                 result.put("email", resultSet.getString("email"));
                 result.put("passwd", resultSet.getString("passwd"));
-                result.put("imgId", resultSet.getInt("imgId"));
+                result.put("imgId", resultSet.getLong("imgId"));
                 result.put("name", resultSet.getString("name"));
             }
             resultSet.close();
             System.out.println(preparedStatement.toString());
+            return result;
         } catch (SQLException e) {
             System.err.println("Cannot read a user row");
             e.printStackTrace();
@@ -218,13 +219,13 @@ public class JDBCAdapter {
                 e.printStackTrace();
             }
         }
-        return result;
+        return null;
     }
 
     /* event table operations */
     // insert an event row and return its id if success, -1 if fail
-    public int insertEvent(String creatorEmail, String name, double lat, double lon,
-                            String eventDateTime, String description, int imgId) {
+    public long insertEvent(String creatorEmail, String name, double lat, double lon,
+                            String eventDateTime, String description, long imgId) {
         try {
         	// insert event data to table
             preparedStatement = connection.prepareStatement("INSERT INTO event " +
@@ -236,14 +237,14 @@ public class JDBCAdapter {
             preparedStatement.setDouble(4, lon);
             preparedStatement.setString(5, eventDateTime);
             preparedStatement.setString(6, description);
-            preparedStatement.setInt(7, imgId);
-            int count = preparedStatement.executeUpdate();
+            preparedStatement.setLong(7, imgId);
+            long count = preparedStatement.executeUpdate();
             // get the index of newly added event
     		preparedStatement = connection.prepareStatement("SELECT MAX(id) AS id FROM event");
     		resultSet = preparedStatement.executeQuery();
     		resultSet.next();
     		if (resultSet != null)
-    			return resultSet.getInt("id");
+    			return resultSet.getLong("id");
             System.out.println("Insert count: " + count);
             System.out.println(preparedStatement.toString());
         } catch (SQLException e) {
@@ -264,24 +265,25 @@ public class JDBCAdapter {
     // update an event
 
     // read an event as a json object
-    public JSONObject readEvent(int id) {
+    public JSONObject readEvent(long id) {
         JSONObject result = new JSONObject();
         try {
             preparedStatement = connection.prepareStatement("SELECT * FROM event WHERE id=?");
-            preparedStatement.setInt(1, id);
+            preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
             resultSet.next();
             if (resultSet != null) {
-                result.put("id", resultSet.getInt("id"));
+                result.put("id", resultSet.getLong("id"));
                 result.put("creatorEmail", resultSet.getString("creatorEmail"));
                 result.put("name", resultSet.getString("name"));
                 result.put("lat", resultSet.getDouble("lat"));
                 result.put("lon", resultSet.getDouble("lon"));
                 result.put("eventDateTime", resultSet.getString("eventDateTime"));
                 result.put("description", resultSet.getString("description"));
-                result.put("imgId", resultSet.getInt("imgId"));
+                result.put("imgId", resultSet.getLong("imgId"));
             }
             System.out.println(preparedStatement.toString());
+            return result;
         } catch (SQLException e) {
             System.err.println("Cannot insert event in event");
             e.printStackTrace();
@@ -294,12 +296,12 @@ public class JDBCAdapter {
                 e.printStackTrace();
             }
         }
-        return result;
+        return null;
     }
 
     // return a list of eventIds whose distance is within user preference
-    public ArrayList<Integer> readEventListByGeoOrderByTime(double lat, double lon, double dist) {
-        ArrayList<Integer> result = new ArrayList<>();
+    public ArrayList<Long> readEventListByGeoOrderByTime(double lat, double lon, double dist) {
+        ArrayList<Long> result = new ArrayList<>();
         try {
             preparedStatement = connection.prepareStatement("SELECT * FROM event ORDER BY eventDateTime");
             resultSet = preparedStatement.executeQuery();
@@ -307,7 +309,7 @@ public class JDBCAdapter {
                 double eLat = resultSet.getDouble("lat");
                 double eLon = resultSet.getDouble("lon");
                 if (Utility.computeDistanceUsingGeoLoc(lat, lon, eLat, eLon) < dist)
-                    result.add(resultSet.getInt("id"));
+                    result.add(resultSet.getLong("id"));
             }
         } catch (SQLException e) {
             System.err.println("error getting event list of geo location specification");
@@ -328,17 +330,20 @@ public class JDBCAdapter {
 
     /* eventUser table operations */
     // insert a event-user association if one decides to participate
-    public void insertEventUserRelation(int eventId, String usrEmail) {
+    // return true if success, false if fail
+    public boolean insertEventUserRelation(long eventId, String usrEmail) {
         try {
             preparedStatement = connection.prepareStatement("INSERT INTO eventUser VALUES (?, ?)");
-            preparedStatement.setInt(1, eventId);
+            preparedStatement.setLong(1, eventId);
             preparedStatement.setString(2, usrEmail);
-            int count = preparedStatement.executeUpdate();
+            long count = preparedStatement.executeUpdate();
             System.out.println("Insert count: " + count);
             System.out.println(preparedStatement.toString());
+            return true;
         } catch (SQLException e) {
             System.err.println("Cannot insert into table eventUser");
             e.printStackTrace();
+            return false;
         } finally {
             try {
                 if (preparedStatement != null)
@@ -351,12 +356,12 @@ public class JDBCAdapter {
     }
 
     // delete an event-user association
-    public void deleteEventUserRelation(int eventId, String usrEmail) {
+    public void deleteEventUserRelation(long eventId, String usrEmail) {
         try {
             preparedStatement = connection.prepareStatement("DELETE FROM eventUser WHERE eventId=? AND usrEmail=?");
-            preparedStatement.setInt(1, eventId);
+            preparedStatement.setLong(1, eventId);
             preparedStatement.setString(2, usrEmail);
-            int count = preparedStatement.executeUpdate();
+            long count = preparedStatement.executeUpdate();
             System.out.println("Delete count: " + count);
             System.out.println(preparedStatement.toString());
         } catch (SQLException e) {
@@ -375,8 +380,8 @@ public class JDBCAdapter {
     }
 
     // given a email return an list of indexes of events ordered by time
-    public ArrayList<Integer> readEventListByEmailOrderByTime(String usrEmail) {
-        ArrayList<Integer> result = new ArrayList<>();
+    public ArrayList<Long> readEventListByEmailOrderByTime(String usrEmail) {
+        ArrayList<Long> result = new ArrayList<>();
         try {
             preparedStatement = connection.prepareStatement("SELECT eventId FROM eventUser, event " +
                     "WHERE eventUser.eventId=event.id AND usrEmail=? " +
@@ -384,7 +389,7 @@ public class JDBCAdapter {
             preparedStatement.setString(1, usrEmail);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                result.add(resultSet.getInt("eventId"));
+                result.add(resultSet.getLong("eventId"));
             }
         } catch (SQLException e) {
             System.err.println("Cannot get ids of event for a user email");
@@ -402,15 +407,15 @@ public class JDBCAdapter {
     }
 
     // count the number of followers of an event
-    public int readEventFollowers(int id) {
-        int result = -1;
+    public long readEventFollowers(long id) {
+        long result = -1;
         try {
             preparedStatement = connection.prepareStatement("SELECT COUNT(usrEmail) FROM eventUser WHERE eventId=?");
-            preparedStatement.setInt(1, id);
+            preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
             resultSet.next();
             if (resultSet != null)
-                result = resultSet.getInt(1);
+                result = resultSet.getLong(1);
             System.out.println(preparedStatement.toString());
         } catch (SQLException e) {
             System.err.println("Cannot get ids of event for a user email");

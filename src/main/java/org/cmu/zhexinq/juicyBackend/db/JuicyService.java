@@ -15,16 +15,19 @@ import java.util.ArrayList;
 public class JuicyService {
     private static JDBCAdapter adapter = new JDBCAdapter(JuicyDBConstants.url, JuicyDBConstants.driverClass, 
     		JuicyDBConstants.user, JuicyDBConstants.passwd);
+    private final static String WRONG_INPUT_RESP = "only support valid json string format";
+    private final static String WRONG_INPUT_SPEC_RESP = "JSON specification not correct";
+    private final static String FAIL_TO_CREATE_RESP = "fail to persist data according to request";
     
     // return upcoming events 
     // JSON -> {id, eventDateTime, imgUri, creatorEmail, name, description, lon, lat, followers}
     public synchronized String getUpcomingEventsByEmail(String email) {
-    	ArrayList<Integer> eventIds = adapter.readEventListByEmailOrderByTime(email);
+    	ArrayList<Long> eventIds = adapter.readEventListByEmailOrderByTime(email);
     	JSONArray eventList = new JSONArray();
     	JSONObject eventAndFollower;
-    	int count;
+    	long count;
     	
-		for (Integer i : eventIds) {
+		for (Long i : eventIds) {
 			eventAndFollower = adapter.readEvent(i);
 			count = adapter.readEventFollowers(i);
 			eventAndFollower.put("followers", count);
@@ -37,7 +40,9 @@ public class JuicyService {
     public synchronized String createEventFromJSON (String jsonStr) {
     	// get attribute values out of json string
     	JSONObject event = (JSONObject) JSONValue.parse(jsonStr);
-    	if (event != null) {
+    	if (event == null)
+    		return WRONG_INPUT_RESP;
+    	try {
 	    	String creatorEmail = (String) event.get("creatorEmail");
 	    	String name = (String) event.get("name");
 	    	Double lat = (Double) event.get("lat");
@@ -46,13 +51,37 @@ public class JuicyService {
 	    	String description = (String) event.get("description");
 	    	String imgStr = (String) event.get("imgStr");
 	    	// persist image data into image table
-	    	int imgId = adapter.insertImage(imgStr);
+	    	long imgId = adapter.insertImage(imgStr);
 	    	// persist event data into event table
-	    	int eventId = adapter.insertEvent(creatorEmail, name, lat, lon, eventDateTime, description, imgId);
+	    	long eventId = adapter.insertEvent(creatorEmail, name, lat, lon, eventDateTime, description, imgId);
 	    	if (eventId > 0)
 	    		return adapter.readEvent(eventId).toJSONString();
+    	} catch (NullPointerException e) {
+    		e.printStackTrace();
+    		return WRONG_INPUT_SPEC_RESP;
     	}
-    	return "fail to create the event";
+    	return FAIL_TO_CREATE_RESP;
+    }
+    
+    // associate a user with an event
+    public synchronized String setUserJoinEventFromJSON(String jsonStr) {
+    	// get attribute values out of json string
+    	JSONObject event = (JSONObject) JSONValue.parse(jsonStr);
+    	if (event == null)
+    		return WRONG_INPUT_RESP;
+    	try {
+	    	String userEmail = (String) event.get("userEmail");
+	    	Long eventId = (Long) event.get("eventId");
+	    	// persist event-user relation data into eventUser table
+	    	if (adapter.readUser(userEmail) != null && adapter.readEvent(eventId) != null) {	
+		    	if (adapter.insertEventUserRelation(eventId, userEmail))
+		    		return adapter.readEvent(eventId).toJSONString();
+	    	}
+    	} catch (NullPointerException e) {
+    		e.printStackTrace();
+    		return WRONG_INPUT_SPEC_RESP;
+    	}
+    	return FAIL_TO_CREATE_RESP;
     }
 
     // unit tests of DB functions
@@ -91,19 +120,19 @@ public class JuicyService {
         // insert eventUser test
         jdbcAdapter.insertEventUserRelation(2, "lqc@cmu.edu");
         // event list of a user email test
-        ArrayList<Integer> eventIds = jdbcAdapter.readEventListByEmailOrderByTime("lqc@cmu.edu");
-        for (Integer i : eventIds) {
+        ArrayList<Long> eventIds = jdbcAdapter.readEventListByEmailOrderByTime("lqc@cmu.edu");
+        for (Long i : eventIds) {
             event1 = jdbcAdapter.readEvent(i);
             System.out.println("by email list: " + event1.toJSONString());
         }
         // event population count test
-        int event1Count = jdbcAdapter.readEventFollowers(1);
+        long event1Count = jdbcAdapter.readEventFollowers(1);
         System.out.println("event 1 has " + event1Count + " followers");
         // unfollow event test
         jdbcAdapter.deleteEventUserRelation(2, "lqc@cmu.edu");
         // find events by geo specification test
         eventIds = jdbcAdapter.readEventListByGeoOrderByTime(23.1, -23.5, 100);
-        for (Integer i : eventIds) {
+        for (Long i : eventIds) {
             event1 = jdbcAdapter.readEvent(i);
             System.out.println("by geo list: " + event1.toJSONString());
         }
