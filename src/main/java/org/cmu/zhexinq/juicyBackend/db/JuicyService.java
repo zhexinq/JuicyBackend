@@ -66,12 +66,12 @@ public class JuicyService {
     // associate a user with an event
     public synchronized String setUserJoinEventFromJSON(String jsonStr) {
     	// get attribute values out of json string
-    	JSONObject event = (JSONObject) JSONValue.parse(jsonStr);
-    	if (event == null)
+    	JSONObject join = (JSONObject) JSONValue.parse(jsonStr);
+    	if (join == null)
     		return WRONG_INPUT_RESP;
     	try {
-	    	String userEmail = (String) event.get("userEmail");
-	    	Long eventId = (Long) event.get("eventId");
+	    	String userEmail = (String) join.get("userEmail");
+	    	Long eventId = (Long) join.get("eventId");
 	    	// persist event-user relation data into eventUser table
 	    	if (adapter.readUser(userEmail) != null && adapter.readEvent(eventId) != null) {	
 		    	if (adapter.insertEventUserRelation(eventId, userEmail))
@@ -82,6 +82,49 @@ public class JuicyService {
     		return WRONG_INPUT_SPEC_RESP;
     	}
     	return FAIL_TO_CREATE_RESP;
+    }
+    
+    // disjoin a user from an event
+    public synchronized String setUserDisjoinEventFromJSON(String jsonStr) {
+    	// get attribute values out of json string
+    	JSONObject disjoin = (JSONObject) JSONValue.parse(jsonStr);
+    	if (disjoin == null)
+    		return WRONG_INPUT_RESP;
+    	try {
+	    	String userEmail = (String) disjoin.get("userEmail");
+	    	Long eventId = (Long) disjoin.get("eventId");
+	    	String resp = adapter.readEvent(eventId).toJSONString();
+	    	// persist event-user relation data into eventUser table
+	    	if (adapter.deleteEventUserRelation(eventId, userEmail))
+	    		return resp;
+    	} catch (NullPointerException e) {
+    		e.printStackTrace();
+    		return WRONG_INPUT_SPEC_RESP;
+    	}
+    	return FAIL_TO_CREATE_RESP;
+    }
+    
+    // return a list of events nearby specified location
+    public synchronized String exploreEventsFromJSON(String jsonStr) {
+    	JSONObject geo = (JSONObject) JSONValue.parse(jsonStr);
+    	if (geo == null)
+    		return WRONG_INPUT_RESP;
+    	try {
+    		// get attribute values out of json string
+	    	Double lon = (Double) geo.get("lon");
+	    	Double lat = (Double) geo.get("lat");
+	    	Double dist = ((Long)geo.get("distance")).doubleValue();
+	    	// search for events within specified distance
+	    	ArrayList<Long> eventIds = adapter.readEventListByGeoOrderByTime(lat, lon, dist);
+	    	JSONArray eventList = new JSONArray();
+	    	for (Long id : eventIds) {
+	    		eventList.add(adapter.readEvent(id));
+	    	}
+	    	return eventList.toJSONString();	
+    	} catch (NullPointerException e) {
+    		e.printStackTrace();
+    		return WRONG_INPUT_SPEC_RESP;
+    	}
     }
 
     // unit tests of DB functions

@@ -45,6 +45,22 @@ public class Event {
 		return service.setUserJoinEventFromJSON(jsonStr);
 	}
 	
+	@Path("disjoin")
+	@POST
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String disjoinEvent(String jsonStr) {
+		return service.setUserDisjoinEventFromJSON(jsonStr);
+	}
+	
+	@Path("explore")
+	@POST
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String exploreEvents(String jsonStr) {
+		return service.exploreEventsFromJSON(jsonStr);
+	}
+	
 	
 	
 	

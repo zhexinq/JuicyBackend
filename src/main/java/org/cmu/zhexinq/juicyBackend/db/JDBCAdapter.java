@@ -356,7 +356,8 @@ public class JDBCAdapter {
     }
 
     // delete an event-user association
-    public void deleteEventUserRelation(long eventId, String usrEmail) {
+    // return true if delete success, else false
+    public boolean deleteEventUserRelation(long eventId, String usrEmail) {
         try {
             preparedStatement = connection.prepareStatement("DELETE FROM eventUser WHERE eventId=? AND usrEmail=?");
             preparedStatement.setLong(1, eventId);
@@ -364,9 +365,11 @@ public class JDBCAdapter {
             long count = preparedStatement.executeUpdate();
             System.out.println("Delete count: " + count);
             System.out.println(preparedStatement.toString());
+            return true;
         } catch (SQLException e) {
             System.err.println("Cannot delete event-user relation");
             e.printStackTrace();
+            return false;
         } finally {
             try {
                 if (preparedStatement != null)
