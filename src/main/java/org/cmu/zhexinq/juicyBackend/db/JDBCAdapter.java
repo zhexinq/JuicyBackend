@@ -82,12 +82,17 @@ public class JDBCAdapter {
     }
     
     /* image table operations */
-    // insert an image to the DB
-    public void insertImage(String imageStr) {
+    // insert an image to the DB, and return its id, -1 if failed
+    public int insertImage(String imageStr) {
     	try {
     		preparedStatement = connection.prepareStatement("INSERT INTO image (content) VALUES (?)");
     		preparedStatement.setString(1, imageStr);
     		int count = preparedStatement.executeUpdate();
+    		preparedStatement = connection.prepareStatement("SELECT MAX(id) AS id FROM image");
+    		resultSet = preparedStatement.executeQuery();
+    		resultSet.next();
+    		if (resultSet != null)
+    			return resultSet.getInt("id");
             System.out.println("Insert count: " + count);
             System.out.println(preparedStatement.toString());
         } catch (SQLException e) {
@@ -102,6 +107,7 @@ public class JDBCAdapter {
                 e.printStackTrace();
             }
         }
+    	return -1;
     }
     
     // read an image from DB as String
@@ -132,7 +138,6 @@ public class JDBCAdapter {
     	return result;
     }
     
-
     /* user table operations */
     // insert a user row
     public void insertUser(String email, String name, String passwd, int imgId) {
@@ -217,10 +222,11 @@ public class JDBCAdapter {
     }
 
     /* event table operations */
-    // insert an event row
-    public void insertEvent(String creatorEmail, String name, double lat, double lon,
+    // insert an event row and return its id if success, -1 if fail
+    public int insertEvent(String creatorEmail, String name, double lat, double lon,
                             String eventDateTime, String description, int imgId) {
         try {
+        	// insert event data to table
             preparedStatement = connection.prepareStatement("INSERT INTO event " +
                     "(creatorEmail, name, lat, lon, eventDateTime, description, imgId)" +
                     "VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -232,6 +238,12 @@ public class JDBCAdapter {
             preparedStatement.setString(6, description);
             preparedStatement.setInt(7, imgId);
             int count = preparedStatement.executeUpdate();
+            // get the index of newly added event
+    		preparedStatement = connection.prepareStatement("SELECT MAX(id) AS id FROM event");
+    		resultSet = preparedStatement.executeQuery();
+    		resultSet.next();
+    		if (resultSet != null)
+    			return resultSet.getInt("id");
             System.out.println("Insert count: " + count);
             System.out.println(preparedStatement.toString());
         } catch (SQLException e) {
@@ -246,6 +258,7 @@ public class JDBCAdapter {
                 e.printStackTrace();
             }
         }
+        return -1;
     }
 
     // update an event

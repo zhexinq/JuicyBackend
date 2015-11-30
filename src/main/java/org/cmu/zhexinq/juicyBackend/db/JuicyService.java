@@ -35,15 +35,24 @@ public class JuicyService {
     
     // create a event in db, if success return event in json format, otherwise return "fail"
     public synchronized String createEventFromJSON (String jsonStr) {
+    	// get attribute values out of json string
     	JSONObject event = (JSONObject) JSONValue.parse(jsonStr);
-    	String creatorEmail = (String) event.get("creatorEmail");
-    	String name = (String) event.get("name");
-    	Double lat = (Double) event.get("lat");
-    	Double lon = (Double) event.get("lon");
-    	String eventDateTime = (String) event.get("eventDateTime");
-    	String description = (String) event.get("description");
-    	String imgStr = (String) event.get("imgStr");
-    	return null;
+    	if (event != null) {
+	    	String creatorEmail = (String) event.get("creatorEmail");
+	    	String name = (String) event.get("name");
+	    	Double lat = (Double) event.get("lat");
+	    	Double lon = (Double) event.get("lon");
+	    	String eventDateTime = (String) event.get("eventDateTime");
+	    	String description = (String) event.get("description");
+	    	String imgStr = (String) event.get("imgStr");
+	    	// persist image data into image table
+	    	int imgId = adapter.insertImage(imgStr);
+	    	// persist event data into event table
+	    	int eventId = adapter.insertEvent(creatorEmail, name, lat, lon, eventDateTime, description, imgId);
+	    	if (eventId > 0)
+	    		return adapter.readEvent(eventId).toJSONString();
+    	}
+    	return "fail to create the event";
     }
 
     // unit tests of DB functions
