@@ -21,11 +21,16 @@ response:
 [
   {
     "eventDateTime": "2015-05-27 08:25:51.0",
-    "imgStr": "image string",
+    "imgStr": "first image string",
+    "creator": {
+      "imgStr": "first image string",
+      "passwd": "9527",
+      "name": "Aladin",
+      "email": "eventCreator@cmu.edu"
+    },
     "followers": 3,
-    "imgId": 3,
     "creatorEmail": "eventCreator@cmu.edu",
-    "name": "Aladin",
+    "name": "CMU conference",
     "description": "This is a great event!",
     "lon": -23.5,
     "id": 1,
@@ -33,11 +38,16 @@ response:
   },
   {
     "eventDateTime": "2015-09-27 12:25:51.0",
-    "imgStr": "image string",
+    "imgStr": "first image string",
+    "creator": {
+      "imgStr": "first image string",
+      "passwd": "9527",
+      "name": "Paladin",
+      "email": "anotherEvent@cmu.edu"
+    },
     "followers": 1,
-    "imgId": 3,
     "creatorEmail": "anotherEvent@cmu.edu",
-    "name": "Paladin",
+    "name": "Juicy Summit",
     "description": "This is a another great event!",
     "lon": -23.4,
     "id": 2,
