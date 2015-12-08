@@ -8,10 +8,6 @@ CREATE TABLE image (
 	PRIMARY KEY (id)
 );
 
-INSERT INTO image VALUES (1, "first image string");
-INSERT INTO image VALUES (2, "second image string");
-INSERT INTO image VALUES (3, "third image string");
-
 CREATE TABLE user (
 	email VARCHAR(255) NOT NULL UNIQUE,
 	name VARCHAR(255) NOT NULL UNIQUE,

@@ -9,7 +9,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.servlet.ServletContext;
 
 import org.cmu.zhexinq.juicyBackend.db.JDBCAdapter;
 import org.cmu.zhexinq.juicyBackend.db.JuicyDBConstants;
@@ -20,6 +22,8 @@ import org.json.simple.JSONArray;
 @Path("event")
 @SuppressWarnings("unchecked")
 public class Event {
+	@Context 
+	private ServletContext context;
 	private JuicyService service = new JuicyService();
 
 	@Path("upcoming/{email}")
@@ -34,7 +38,7 @@ public class Event {
 	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String createEvent(String jsonStr) {
-		return service.createEventFromJSON(jsonStr);
+		return service.createEventFromJSON(jsonStr, context);
 	}
 	
 	@Path("join")

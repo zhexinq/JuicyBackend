@@ -7,6 +7,8 @@ import org.json.simple.JSONValue;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
+import javax.servlet.ServletContext;
+
 /**
  * Service class to serve android app request
  * Created by qiuzhexin on 11/27/15.
@@ -43,7 +45,7 @@ public class JuicyService {
     }
     
     // create a event in db, if success return event in json format, otherwise return "fail"
-    public synchronized String createEventFromJSON (String jsonStr) {
+    public synchronized String createEventFromJSON (String jsonStr, ServletContext context) {
     	// get attribute values out of json string
     	JSONObject event = (JSONObject) JSONValue.parse(jsonStr);
     	if (event == null)
@@ -55,9 +57,13 @@ public class JuicyService {
 	    	Double lon = (Double) event.get("lon");
 	    	String eventDateTime = (String) event.get("eventDateTime");
 	    	String description = (String) event.get("description");
+	    	// get the image string, write the image to disk, and store its url
 	    	String imgStr = (String) event.get("imgStr");
+	    	String imgFormat = (String) event.get("imgFormat");
+	    	long imgId = adapter.nextImgId();
+	    	String url = Utility.writeImageToWebContent(imgStr, context, imgId, imgFormat);
 	    	// persist image data into image table
-	    	long imgId = adapter.insertImage(imgStr);
+	    	imgId = adapter.insertImage(url);
 	    	// persist event data into event table
 	    	long eventId = adapter.insertEvent(creatorEmail, name, lat, lon, eventDateTime, description, imgId);
 	    	if (eventId > 0)
@@ -195,9 +201,8 @@ public class JuicyService {
             event1 = jdbcAdapter.readEvent(i);
             System.out.println("by geo list: " + event1.toJSONString());
         }
-        // test decode image
-//        String imgStr = adapter.readImage(1);
-//        Utility.convertStrToImg("/Users/qiuzhexin/Documents/workspace/juicyBackend/new.jpg", imgStr);
+        // test decode image and write to web content folder
+//        String imgStr = adapter.readImage(4);
     }
 
 }

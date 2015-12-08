@@ -7,6 +7,10 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -49,16 +53,30 @@ public class Utility {
     }
     
     // decode a string to image and wrtie to disk
-    public static void convertStrToImg(String pathToStore, String imgStr) {
+    public static void convertStrToImg(String pathToStore, String imgStr, String imgFormat) {
     	try {
     		byte[] imageInByte = Base64.decodeBase64(imgStr);
     		BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageInByte));
-    		ImageIO.write(image, "jpg", new File(pathToStore));
+    		ImageIO.write(image, imgFormat, new File(pathToStore));
     	} catch (IOException e) {
     		e.printStackTrace();
     	}
     }
     
-    
+    // write a image to disk, and return the path
+    public static String writeImageToWebContent(String imgStr, ServletContext context, long imgId, String imgFormat) {
+    	String contentPath = context.getRealPath("/");
+    	contentPath = contentPath + imgId + "." + imgFormat;
+    	System.out.println("The image path: " + contentPath);
+    	convertStrToImg(contentPath, imgStr, imgFormat);
+    	String ip = null;
+    	try {
+    		ip = InetAddress.getLocalHost().getHostAddress();
+    		System.out.println("get IP address: " + ip);
+    	} catch (UnknownHostException e) {
+    		e.printStackTrace();
+    	}
+    	return ip + ":8080/juicyBackend/" + imgId + "." + imgFormat;
+    }
     
 }

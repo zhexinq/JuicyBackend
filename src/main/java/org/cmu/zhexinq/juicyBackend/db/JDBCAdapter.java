@@ -112,6 +112,30 @@ public class JDBCAdapter {
     	return -1;
     }
     
+    // return the next image id
+    public long nextImgId() {
+    	try {
+    		preparedStatement = connection.prepareStatement("SELECT MAX(id) AS id FROM image");
+    		resultSet = preparedStatement.executeQuery();
+    		resultSet.next();
+    		if (resultSet != null)
+    			return resultSet.getLong("id");
+            System.out.println(preparedStatement.toString());
+    	} catch (SQLException e) {
+            System.err.println("Cannot read next imgage id from image table");
+            e.printStackTrace();
+        } finally {
+            try {
+                if (preparedStatement != null)
+                    preparedStatement.close();
+            } catch (Exception e) {
+                System.out.println("prepared statement cannot be closed");
+                e.printStackTrace();
+            }
+        }
+    	return -1;
+    }
+    
     // read an image from DB as String
     public String readImage(long id) {
     	String result = null;
@@ -270,7 +294,7 @@ public class JDBCAdapter {
     public JSONObject readEvent(long id) {
         JSONObject result = new JSONObject();
         try {
-            preparedStatement = connection.prepareStatement("SELECT * FROM event JOIN image ON imgId WHERE event.id=?");
+            preparedStatement = connection.prepareStatement("SELECT * FROM event JOIN image ON event.imgId=image.id WHERE event.id=?");
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
             resultSet.next();
