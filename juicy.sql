@@ -8,6 +8,10 @@ CREATE TABLE image (
 	PRIMARY KEY (id)
 );
 
+INSERT INTO image VALUES (1, "http://i.imgur.com/DvpvklR.png");
+INSERT INTO image VALUES (2, "http://i.imgur.com/DvpvklR.png");
+INSERT INTO image VALUES (3, "http://i.imgur.com/DvpvklR.png");
+
 CREATE TABLE user (
 	email VARCHAR(255) NOT NULL UNIQUE,
 	name VARCHAR(255) NOT NULL UNIQUE,

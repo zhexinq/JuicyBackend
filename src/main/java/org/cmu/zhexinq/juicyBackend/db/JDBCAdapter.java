@@ -306,7 +306,7 @@ public class JDBCAdapter {
                 result.put("lon", resultSet.getDouble("lon"));
                 result.put("eventDateTime", resultSet.getString("eventDateTime"));
                 result.put("description", resultSet.getString("description"));
-                result.put("imgStr", resultSet.getString("content"));
+                result.put("imgUrl", resultSet.getString("content"));
             }
             System.out.println(preparedStatement.toString());
             return result;
