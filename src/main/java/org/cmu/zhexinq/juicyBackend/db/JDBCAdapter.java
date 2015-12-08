@@ -13,6 +13,7 @@ import java.util.ArrayList;
  * user -> (email, name, passwd, imgId)
  * event -> (id, creatorEmail, name, lat, lon, eventDateTime, description, imgId)
  * eventUser -> (eventId, usrEmail)
+ * 
  * Created by qiuzhexin on 11/25/15.
  */
 @SuppressWarnings("unchecked")
@@ -195,14 +196,14 @@ public class JDBCAdapter {
     public JSONObject readUser(String email) {
         JSONObject result = new JSONObject();
         try {
-            preparedStatement = connection.prepareStatement("SELECT * FROM user WHERE email=?");
+            preparedStatement = connection.prepareStatement("SELECT * FROM user JOIN image on imgId WHERE email=?");
             preparedStatement.setString(1, email);
             resultSet = preparedStatement.executeQuery();
             resultSet.next();
             if (resultSet != null) {
                 result.put("email", resultSet.getString("email"));
                 result.put("passwd", resultSet.getString("passwd"));
-                result.put("imgId", resultSet.getLong("imgId"));
+                result.put("imgStr", resultSet.getString("content"));
                 result.put("name", resultSet.getString("name"));
             }
             resultSet.close();
@@ -269,7 +270,7 @@ public class JDBCAdapter {
     public JSONObject readEvent(long id) {
         JSONObject result = new JSONObject();
         try {
-            preparedStatement = connection.prepareStatement("SELECT * FROM event WHERE id=?");
+            preparedStatement = connection.prepareStatement("SELECT * FROM event JOIN image ON imgId WHERE event.id=?");
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
             resultSet.next();
@@ -281,7 +282,7 @@ public class JDBCAdapter {
                 result.put("lon", resultSet.getDouble("lon"));
                 result.put("eventDateTime", resultSet.getString("eventDateTime"));
                 result.put("description", resultSet.getString("description"));
-                result.put("imgId", resultSet.getLong("imgId"));
+                result.put("imgStr", resultSet.getString("content"));
             }
             System.out.println(preparedStatement.toString());
             return result;
@@ -435,6 +436,4 @@ public class JDBCAdapter {
         }
         return result;
     }
-
-
 }

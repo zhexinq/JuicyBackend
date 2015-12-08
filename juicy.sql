@@ -8,6 +8,10 @@ CREATE TABLE image (
 	PRIMARY KEY (id)
 );
 
+INSERT INTO image VALUES (1, "first image string");
+INSERT INTO image VALUES (2, "second image string");
+INSERT INTO image VALUES (3, "third image string");
+
 CREATE TABLE user (
 	email VARCHAR(255) NOT NULL UNIQUE,
 	name VARCHAR(255) NOT NULL UNIQUE,
@@ -20,6 +24,10 @@ CREATE TABLE user (
 INSERT INTO user VALUES ("zxq@cmu.edu", "zhexinq", "123456", 1);
 INSERT INTO user VALUES ("pfj@cmu.edu", "pufanj", "123456", 2);
 INSERT INTO user VALUES ("lqc@cmu.edu", "linquanc", "123456", 3);
+INSERT INTO user VALUES ("eventCreator@cmu.edu", "Aladin", "9527", 1);
+INSERT INTO user VALUES ("anotherEvent@cmu.edu", "Paladin", "9527", 2);
+INSERT INTO user VALUES ("yetAnotherEvent@cmu.edu", "Soladin", "9527", 3);
+
 
 CREATE TABLE event (
 	id INTEGER NOT NULL AUTO_INCREMENT,
@@ -36,18 +44,18 @@ CREATE TABLE event (
 );
 
 INSERT INTO event (creatorEmail, name, lat, lon, eventDateTime, description, imgId) 
-VALUES ("eventCreator@cmu.edu", "Aladin", 23.1, -23.5, "2015-5-27 08:25:51", "This is a great event!", 
+VALUES ("eventCreator@cmu.edu", "CMU conference", 23.1, -23.5, "2015-5-27 08:25:51", "This is a great event!", 
 	3);
 INSERT INTO event (creatorEmail, name, lat, lon, eventDateTime, description, imgId) 
-VALUES ("anotherEvent@cmu.edu", "Paladin", 23.2, -23.4, "2015-9-27 12:25:51", "This is a another great event!", 
+VALUES ("anotherEvent@cmu.edu", "Juicy Summit", 23.2, -23.4, "2015-9-27 12:25:51", "This is a another great event!", 
 	3);
 INSERT INTO event (creatorEmail, name, lat, lon, eventDateTime, description, imgId) 
-VALUES ("yetAnotherEvent@cmu.edu", "Soladin", 23.2, -23.5, "2015-1-24 08:25:51", "This is yet another great event!", 
+VALUES ("yetAnotherEvent@cmu.edu", "Linux workshop", 23.2, -23.5, "2015-1-24 08:25:51", "This is yet another great event!", 
 	2);
 
 CREATE TABLE eventUser (
-	eventId INTEGER,
-	usrEmail VARCHAR(255),
+	eventId INTEGER NOT NULL,
+	usrEmail VARCHAR(255) NOT NULL,
 	FOREIGN KEY (eventId) REFERENCES event (id),
 	FOREIGN KEY (usrEmail) REFERENCES user (email)
 );

@@ -61,8 +61,4 @@ public class Event {
 		return service.exploreEventsFromJSON(jsonStr);
 	}
 	
-	
-	
-	
-	
 }

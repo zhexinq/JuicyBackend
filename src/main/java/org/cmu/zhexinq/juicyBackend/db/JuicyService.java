@@ -24,19 +24,20 @@ public class JuicyService {
     public synchronized String getUpcomingEventsByEmail(String email) {
     	ArrayList<Long> eventIds = adapter.readEventListByEmailOrderByTime(email);
     	JSONArray eventList = new JSONArray();
-    	JSONObject eventFollowerImage;
+    	JSONObject eventFollowerUser;
+    	JSONObject creator;
     	long count;
     	
 		for (Long i : eventIds) {
 			// add follower count to the event list json response
-			eventFollowerImage = adapter.readEvent(i);
+			eventFollowerUser = adapter.readEvent(i);
 			count = adapter.readEventFollowers(i);
-			eventFollowerImage.put("followers", count);
-			// add image to the event list json 
-			long imgId = (Long) eventFollowerImage.get("imgId");
-			String imgStr = adapter.readImage(imgId);
-			eventFollowerImage.put("imgStr", imgStr);
-			eventList.add(eventFollowerImage);
+			eventFollowerUser.put("followers", count);
+			// add createtor info into event list
+			String creatorEmail = (String) eventFollowerUser.get("creatorEmail");
+			creator = adapter.readUser(creatorEmail);
+			eventFollowerUser.put("creator", creator);
+			eventList.add(eventFollowerUser);
 		}
 		return eventList.toString();
     }
@@ -195,8 +196,8 @@ public class JuicyService {
             System.out.println("by geo list: " + event1.toJSONString());
         }
         // test decode image
-        String imgStr = adapter.readImage(1);
-        Utility.convertStrToImg("/Users/qiuzhexin/Documents/workspace/juicyBackend/new.jpg", imgStr);
+//        String imgStr = adapter.readImage(1);
+//        Utility.convertStrToImg("/Users/qiuzhexin/Documents/workspace/juicyBackend/new.jpg", imgStr);
     }
 
 }
