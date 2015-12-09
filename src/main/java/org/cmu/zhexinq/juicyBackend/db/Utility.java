@@ -66,6 +66,7 @@ public class Utility {
     // write a image to disk, and return the path
     public static String writeImageToWebContent(String imgStr, ServletContext context, long imgId, String imgFormat) {
     	String contentPath = context.getRealPath("/");
+//    	String contentPath = "/Users/qiuzhexin/Documents/workspace/juicyBackend/imgShareFolder/";
     	contentPath = contentPath + imgId + "." + imgFormat;
     	System.out.println("The image path: " + contentPath);
     	convertStrToImg(contentPath, imgStr, imgFormat);
@@ -76,7 +77,7 @@ public class Utility {
     	} catch (UnknownHostException e) {
     		e.printStackTrace();
     	}
-    	return ip + ":8080/juicyBackend/" + imgId + "." + imgFormat;
+    	return imgId + "." + imgFormat;
     }
     
 }
