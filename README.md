@@ -20,38 +20,23 @@ response:
 ```json
 [
   {
+    "imgUrl": "http://i.imgur.com/DvpvklR.png",
+    "titleContextColor": 2,
     "eventDateTime": "2015-05-27 08:25:51.0",
-    "imgStr": "first image string",
     "creator": {
-      "imgStr": "first image string",
+      "imgStr": "http://i.imgur.com/DvpvklR.png",
       "passwd": "9527",
       "name": "Aladin",
       "email": "eventCreator@cmu.edu"
     },
     "followers": 3,
+    "imageContextColor": 1,
     "creatorEmail": "eventCreator@cmu.edu",
     "name": "CMU conference",
     "description": "This is a great event!",
     "lon": -23.5,
     "id": 1,
     "lat": 23.1
-  },
-  {
-    "eventDateTime": "2015-09-27 12:25:51.0",
-    "imgStr": "first image string",
-    "creator": {
-      "imgStr": "first image string",
-      "passwd": "9527",
-      "name": "Paladin",
-      "email": "anotherEvent@cmu.edu"
-    },
-    "followers": 1,
-    "creatorEmail": "anotherEvent@cmu.edu",
-    "name": "Juicy Summit",
-    "description": "This is a another great event!",
-    "lon": -23.4,
-    "id": 2,
-    "lat": 23.2
   }
 ]
 ```
