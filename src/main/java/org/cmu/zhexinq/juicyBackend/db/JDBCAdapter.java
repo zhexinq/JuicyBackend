@@ -310,8 +310,8 @@ public class JDBCAdapter {
                 result.put("eventDateTime", resultSet.getString("eventDateTime"));
                 result.put("description", resultSet.getString("description"));
                 result.put("imgUrl", resultSet.getString("content"));
-                result.put("titleContextColor", resultSet.getString("titleContextColor"));
-                result.put("imageContextColor", resultSet.getString("imageContextColor"));
+                result.put("titleContextColor", resultSet.getLong("titleContextColor"));
+                result.put("imageContextColor", resultSet.getLong("imageContextColor"));
             }
             System.out.println(preparedStatement.toString());
             return result;

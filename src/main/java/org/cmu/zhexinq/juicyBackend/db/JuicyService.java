@@ -140,10 +140,6 @@ public class JuicyService {
 				eventFollowerImage = adapter.readEvent(id);
 				count = adapter.readEventFollowers(id);
 				eventFollowerImage.put("followers", count);
-				// add image to the event list json 
-				long imgId = (Long) eventFollowerImage.get("imgId");
-				String imgUrl = adapter.readImage(imgId);
-				eventFollowerImage.put("imgUrl", imgUrl);
 				eventList.add(eventFollowerImage);
 	    	}
 	    	return eventList.toString();	
