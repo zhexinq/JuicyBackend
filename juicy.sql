@@ -38,20 +38,22 @@ CREATE TABLE event (
 	eventDateTime DATETIME NOT NULL,
 	description VARCHAR(255),
 	imgId INTEGER, 
+	imageContextColor INTEGER,
+	titleContextColor INTEGER,
 	PRIMARY KEY (id),
 	FOREIGN KEY (creatorEmail) REFERENCES user (email),
 	FOREIGN KEY (imgId) REFERENCES image (id)
 );
 
-INSERT INTO event (creatorEmail, name, lat, lon, eventDateTime, description, imgId) 
+INSERT INTO event (creatorEmail, name, lat, lon, eventDateTime, description, imgId, imageContextColor, titleContextColor) 
 VALUES ("eventCreator@cmu.edu", "CMU conference", 23.1, -23.5, "2015-5-27 08:25:51", "This is a great event!", 
-	3);
-INSERT INTO event (creatorEmail, name, lat, lon, eventDateTime, description, imgId) 
+	3, 1, 2);
+INSERT INTO event (creatorEmail, name, lat, lon, eventDateTime, description, imgId, imageContextColor, titleContextColor) 
 VALUES ("anotherEvent@cmu.edu", "Juicy Summit", 23.2, -23.4, "2015-9-27 12:25:51", "This is a another great event!", 
-	3);
-INSERT INTO event (creatorEmail, name, lat, lon, eventDateTime, description, imgId) 
+	3, 3, 4);
+INSERT INTO event (creatorEmail, name, lat, lon, eventDateTime, description, imgId, imageContextColor, titleContextColor) 
 VALUES ("yetAnotherEvent@cmu.edu", "Linux workshop", 23.2, -23.5, "2015-1-24 08:25:51", "This is yet another great event!", 
-	2);
+	2, 5, 6);
 
 CREATE TABLE eventUser (
 	eventId INTEGER NOT NULL,

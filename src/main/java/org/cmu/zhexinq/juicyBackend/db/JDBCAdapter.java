@@ -136,7 +136,7 @@ public class JDBCAdapter {
     	return -1;
     }
     
-    // read an image from DB as String
+    // read image url from DB
     public String readImage(long id) {
     	String result = null;
     	try {
@@ -251,12 +251,13 @@ public class JDBCAdapter {
     /* event table operations */
     // insert an event row and return its id if success, -1 if fail
     public long insertEvent(String creatorEmail, String name, double lat, double lon,
-                            String eventDateTime, String description, long imgId) {
+                            String eventDateTime, String description, long imgId, 
+                            long imgContextColor, long titleContextColor) {
         try {
         	// insert event data to table
             preparedStatement = connection.prepareStatement("INSERT INTO event " +
-                    "(creatorEmail, name, lat, lon, eventDateTime, description, imgId)" +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)");
+                    "(creatorEmail, name, lat, lon, eventDateTime, description, imgId, imageContextColor, titleContextColor) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             preparedStatement.setString(1, creatorEmail);
             preparedStatement.setString(2, name);
             preparedStatement.setDouble(3, lat);
@@ -264,6 +265,8 @@ public class JDBCAdapter {
             preparedStatement.setString(5, eventDateTime);
             preparedStatement.setString(6, description);
             preparedStatement.setLong(7, imgId);
+            preparedStatement.setLong(8, imgContextColor);
+            preparedStatement.setLong(9, titleContextColor);
             long count = preparedStatement.executeUpdate();
             // get the index of newly added event
     		preparedStatement = connection.prepareStatement("SELECT MAX(id) AS id FROM event");
@@ -307,6 +310,8 @@ public class JDBCAdapter {
                 result.put("eventDateTime", resultSet.getString("eventDateTime"));
                 result.put("description", resultSet.getString("description"));
                 result.put("imgUrl", resultSet.getString("content"));
+                result.put("titleContextColor", resultSet.getString("titleContextColor"));
+                result.put("imageContextColor", resultSet.getString("imageContextColor"));
             }
             System.out.println(preparedStatement.toString());
             return result;

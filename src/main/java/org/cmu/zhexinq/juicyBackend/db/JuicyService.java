@@ -57,6 +57,9 @@ public class JuicyService {
 	    	Double lon = (Double) event.get("lon");
 	    	String eventDateTime = (String) event.get("eventDateTime");
 	    	String description = (String) event.get("description");
+	    	// add context colors
+	    	Long imageContextColor = (Long) event.get("imageContextColor");
+	    	Long titleContextColor = (Long) event.get("titleContextColor");
 	    	// get the image string, write the image to disk, and store its url
 	    	String imgStr = (String) event.get("imgStr");
 	    	String imgFormat = (String) event.get("imgFormat");
@@ -65,7 +68,8 @@ public class JuicyService {
 	    	// persist image data into image table
 	    	imgId = adapter.insertImage(url);
 	    	// persist event data into event table
-	    	long eventId = adapter.insertEvent(creatorEmail, name, lat, lon, eventDateTime, description, imgId);
+	    	long eventId = adapter.insertEvent(creatorEmail, name, lat, lon, eventDateTime, description, imgId, 
+	    			imageContextColor, titleContextColor);
 	    	if (eventId > 0)
 	    		return adapter.readEvent(eventId).toJSONString();
     	} catch (NullPointerException e) {
@@ -138,8 +142,8 @@ public class JuicyService {
 				eventFollowerImage.put("followers", count);
 				// add image to the event list json 
 				long imgId = (Long) eventFollowerImage.get("imgId");
-				String imgStr = adapter.readImage(imgId);
-				eventFollowerImage.put("imgStr", imgStr);
+				String imgUrl = adapter.readImage(imgId);
+				eventFollowerImage.put("imgUrl", imgUrl);
 				eventList.add(eventFollowerImage);
 	    	}
 	    	return eventList.toString();	
@@ -171,7 +175,7 @@ public class JuicyService {
         System.out.println(jsonStr);
         // insert event test
         jdbcAdapter.insertEvent("eventC@cmu.edu", "sponsor", 12.5, 95.2, "2015-5-27 07:25:51",
-                "description", 2);
+                "description", 2, 1, 2);
         // read a event test
         jsonStr = jdbcAdapter.readEvent(2).toJSONString();
         System.out.println(jsonStr);
