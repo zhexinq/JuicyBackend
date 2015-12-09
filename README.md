@@ -82,23 +82,23 @@ POST http://localhost:8080/juicyBackend/webapi/event/join
 request body:
 ```json
   {
-    "userEmail":"lqc@cmu.edu",
+    "userEmail":"pfj@cmu.edu",
     "eventId": 2
   }
 ```
 response:
 ```json
 {
-  "imgUrl": "http://i.imgur.com/DvpvklR.png",
-  "titleContextColor": "4",
-  "eventDateTime": "2015-09-27 12:25:51.0",
-  "imageContextColor": "3",
-  "creatorEmail": "anotherEvent@cmu.edu",
-  "name": "Juicy Summit",
-  "description": "This is a another great event!",
-  "lon": -23.4,
-  "id": 2,
-  "lat": 23.2
+    "imgUrl": "http://i.imgur.com/DvpvklR.png",
+    "titleContextColor": 4,
+    "eventDateTime": "2015-09-27 12:25:51.0",
+    "imageContextColor": 3,
+    "creatorEmail": "anotherEvent@cmu.edu",
+    "name": "Juicy Summit",
+    "description": "This is a another great event!",
+    "lon": -23.4,
+    "id": 2,
+    "lat": 23.2
 }
 ```
 
@@ -116,16 +116,16 @@ request body:
 response:
 ```json
 {
-  "imgUrl": "http://i.imgur.com/DvpvklR.png",
-  "titleContextColor": "4",
-  "eventDateTime": "2015-09-27 12:25:51.0",
-  "imageContextColor": "3",
-  "creatorEmail": "anotherEvent@cmu.edu",
-  "name": "Juicy Summit",
-  "description": "This is a another great event!",
-  "lon": -23.4,
-  "id": 2,
-  "lat": 23.2
+    "imgUrl": "http://i.imgur.com/DvpvklR.png",
+    "titleContextColor": 4,
+    "eventDateTime": "2015-09-27 12:25:51.0",
+    "imageContextColor": 3,
+    "creatorEmail": "anotherEvent@cmu.edu",
+    "name": "Juicy Summit",
+    "description": "This is a another great event!",
+    "lon": -23.4,
+    "id": 2,
+    "lat": 23.2
 }
 ```
 * explore events nearyby
@@ -143,45 +143,45 @@ request body:
 response:
 ```json
 [
-  {
-  "imgUrl": "http://i.imgur.com/DvpvklR.png",
-  "titleContextColor": "6",
-  "eventDateTime": "2015-01-24 08:25:51.0",
-  "followers": 0,
-  "imageContextColor": "5",
-  "creatorEmail": "yetAnotherEvent@cmu.edu",
-  "name": "Linux workshop",
-  "description": "This is yet another great event!",
-  "lon": -23.5,
-  "id": 3,
-  "lat": 23.2
-  },
-  {
-  "imgUrl": "http://i.imgur.com/DvpvklR.png",
-  "titleContextColor": "2",
-  "eventDateTime": "2015-05-27 08:25:51.0",
-  "followers": 3,
-  "imageContextColor": "1",
-  "creatorEmail": "eventCreator@cmu.edu",
-  "name": "CMU conference",
-  "description": "This is a great event!",
-  "lon": -23.5,
-  "id": 1,
-  "lat": 23.1
-  },
-  {
-  "imgUrl": "http://i.imgur.com/DvpvklR.png",
-  "titleContextColor": "4",
-  "eventDateTime": "2015-09-27 12:25:51.0",
-  "followers": 1,
-  "imageContextColor": "3",
-  "creatorEmail": "anotherEvent@cmu.edu",
-  "name": "Juicy Summit",
-  "description": "This is a another great event!",
-  "lon": -23.4,
-  "id": 2,
-  "lat": 23.2
-  }
+    {
+        "imgUrl": "http://i.imgur.com/DvpvklR.png",
+        "titleContextColor": 6,
+        "eventDateTime": "2015-01-24 08:25:51.0",
+        "followers": 0,
+        "imageContextColor": 5,
+        "creatorEmail": "yetAnotherEvent@cmu.edu",
+        "name": "Linux workshop",
+        "description": "This is yet another great event!",
+        "lon": -23.5,
+        "id": 3,
+        "lat": 23.2
+    },
+    {
+        "imgUrl": "http://i.imgur.com/DvpvklR.png",
+        "titleContextColor": 2,
+        "eventDateTime": "2015-05-27 08:25:51.0",
+        "followers": 3,
+        "imageContextColor": 1,
+        "creatorEmail": "eventCreator@cmu.edu",
+        "name": "CMU conference",
+        "description": "This is a great event!",
+        "lon": -23.5,
+        "id": 1,
+        "lat": 23.1
+    },
+    {
+        "imgUrl": "http://i.imgur.com/DvpvklR.png",
+        "titleContextColor": 4,
+        "eventDateTime": "2015-09-27 12:25:51.0",
+        "followers": 2,
+        "imageContextColor": 3,
+        "creatorEmail": "anotherEvent@cmu.edu",
+        "name": "Juicy Summit",
+        "description": "This is a another great event!",
+        "lon": -23.4,
+        "id": 2,
+        "lat": 23.2
+    }
 ]
 ```
 
