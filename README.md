@@ -72,6 +72,10 @@ request body:
     "lat": 61.7
   }
 ```
+response:
+```json
+{"imgUrl":"10.0.23.181:8080\/juicyBackend\/6.jpg","eventDateTime":"2015-11-27 11:25:51.0","creatorEmail":"post@cmu.edu","name":"ShenDeng","description":"I am about to start an event","lon":20.5,"id":5,"lat":61.7}
+```
 
 * join an event 
 
