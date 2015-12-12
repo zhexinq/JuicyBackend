@@ -1,5 +1,6 @@
 package org.cmu.zhexinq.juicyBackend.db;
 
+import org.cmu.zhexinq.juicyBackend.util.Utility;
 import org.json.simple.JSONObject;
 
 import java.io.*;

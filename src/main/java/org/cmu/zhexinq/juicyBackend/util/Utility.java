@@ -1,4 +1,4 @@
-package org.cmu.zhexinq.juicyBackend.db;
+package org.cmu.zhexinq.juicyBackend.util;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;

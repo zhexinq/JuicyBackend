@@ -1,5 +1,8 @@
-package org.cmu.zhexinq.juicyBackend.db;
+package org.cmu.zhexinq.juicyBackend.service;
 
+import org.cmu.zhexinq.juicyBackend.db.JDBCAdapter;
+import org.cmu.zhexinq.juicyBackend.db.JuicyDBConstants;
+import org.cmu.zhexinq.juicyBackend.util.Utility;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;

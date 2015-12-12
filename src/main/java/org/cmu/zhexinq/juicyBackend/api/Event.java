@@ -1,4 +1,4 @@
-package org.cmu.zhexinq.juicyBackend;
+package org.cmu.zhexinq.juicyBackend.api;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import javax.servlet.ServletContext;
 
 import org.cmu.zhexinq.juicyBackend.db.JDBCAdapter;
 import org.cmu.zhexinq.juicyBackend.db.JuicyDBConstants;
-import org.cmu.zhexinq.juicyBackend.db.JuicyService;
+import org.cmu.zhexinq.juicyBackend.service.JuicyService;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
