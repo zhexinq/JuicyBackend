@@ -142,8 +142,7 @@ public abstract class JuicyServiceProxy {
 				eventFollowerImage = adapter.readEvent(id);
 				count = adapter.readEventFollowers(id);
 				eventFollowerImage.put("followers", count);
-				eventList.add(eventFollowerImage);
-				// add createtor info into event list
+				// add creator info into event list
 				String creatorEmail = (String) eventFollowerImage.get("creatorEmail");
 				creator = adapter.readUser(creatorEmail);
 				eventFollowerImage.put("creator", creator);
