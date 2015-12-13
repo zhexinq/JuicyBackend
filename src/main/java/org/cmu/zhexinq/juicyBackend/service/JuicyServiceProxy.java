@@ -135,11 +135,18 @@ public abstract class JuicyServiceProxy {
 			JSONArray eventList = new JSONArray();
 			JSONObject eventFollowerImage;
 			long count;
+			JSONObject creator;
+			
 			for (Long id : eventIds) {
 				// add follower count to the event list json response
 				eventFollowerImage = adapter.readEvent(id);
 				count = adapter.readEventFollowers(id);
 				eventFollowerImage.put("followers", count);
+				eventList.add(eventFollowerImage);
+				// add createtor info into event list
+				String creatorEmail = (String) eventFollowerImage.get("creatorEmail");
+				creator = adapter.readUser(creatorEmail);
+				eventFollowerImage.put("creator", creator);
 				eventList.add(eventFollowerImage);
 			}
 			return eventList.toString();
