@@ -24,7 +24,7 @@ import org.json.simple.JSONArray;
 public class Event {
 	@Context 
 	private ServletContext context;
-	private JuicyService service = new JuicyService();
+	private JuicyService service = JuicyService.getJuicyService();
 
 	@Path("upcoming/{email}")
 	@GET

@@ -17,12 +17,23 @@ import javax.servlet.ServletContext;
  * Created by qiuzhexin on 11/27/15.
  */
 @SuppressWarnings("unchecked")
-public class JuicyService {
+public class JuicyService extends JuicyServiceProxy {
     private static JDBCAdapter adapter = new JDBCAdapter(JuicyDBConstants.url, JuicyDBConstants.driverClass, 
     		JuicyDBConstants.user, JuicyDBConstants.passwd);
     private final static String WRONG_INPUT_RESP = "only support valid json string format";
     private final static String WRONG_INPUT_SPEC_RESP = "JSON specification not correct";
     private final static String FAIL_TO_CREATE_RESP = "fail to persist data according to request";
+    private static JuicyService juicyService = null;
+    
+    public static JuicyService getJuicyService() {
+    	if (juicyService == null)
+    		juicyService = new JuicyService();
+    	return juicyService;
+    }
+    
+    private JuicyService() {
+    	
+    }
     
     // return upcoming events 
     // JSON -> {id, eventDateTime, imgId, creatorEmail, name, description, lon, lat, followers, ImgStr}
@@ -151,6 +162,66 @@ public class JuicyService {
     		return WRONG_INPUT_SPEC_RESP;
     	}
     }
+    
+    // return response for user login request
+    // verified -> "status": true
+    // not verified -> "status": false
+    public synchronized String gerUserRegisterResponse(String jsonStr) {
+    	// get attribute values out of json string
+    	JSONObject user = (JSONObject) JSONValue.parse(jsonStr);
+    	JSONObject status = new JSONObject();
+    	if (user == null)
+    		return WRONG_INPUT_RESP;
+    	try {
+    		// retrieve user information =
+	    	String email = (String) user.get("email");
+	    	String passwd = (String) user.get("password");
+	    	String name = (String) user.get("name");
+	    	// determine whether the email is already exist
+	    	JSONObject dbUser = adapter.readUser(email);
+	    	if (dbUser == null) {
+	    		// insert the user info into db
+	    		adapter.insertUser(email, name, passwd, 1);
+	    		status.put("status", true);
+	    		return status.toString();
+	    	} else{
+	    		status.put("status", false);
+	    		return status.toString();
+	    	}
+    	} catch (NullPointerException e) {
+    		e.printStackTrace();
+    		return WRONG_INPUT_SPEC_RESP;
+    	}
+    }
+    
+    // return response for user register response
+    // verified -> "status": true
+    // not verified -> "status": "false
+    public synchronized String getUserLoginResponse(String jsonStr) {
+    	// get attribute values out of json string
+    	JSONObject user = (JSONObject) JSONValue.parse(jsonStr);
+    	JSONObject status = new JSONObject();
+    	if (user == null)
+    		return WRONG_INPUT_RESP;
+    	try {
+    		// retrieve user information =
+	    	String email = (String) user.get("email");
+	    	String passwd = (String) user.get("password");
+	    	// determine whether user password & name is correct
+	    	JSONObject dbUser = adapter.readUser(email);
+	    	String dbUsrPasswd = (String) dbUser.get("passwd");
+	    	if (dbUsrPasswd.equals(passwd)) {
+	    		status.put("status", true);
+	    		return status.toString();
+	    	} else
+	    		status.put("status", false);
+	    		return status.toString();
+    	} catch (NullPointerException e) {
+    		e.printStackTrace();
+    		return WRONG_INPUT_SPEC_RESP;
+    	}
+    }
+    
 
     // unit tests of DB functions
     public static void main(String[] args) {
