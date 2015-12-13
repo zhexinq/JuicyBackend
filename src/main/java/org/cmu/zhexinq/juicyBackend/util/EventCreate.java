@@ -1,5 +1,7 @@
 package org.cmu.zhexinq.juicyBackend.util;
 
-public interface EventCreate {
+import javax.servlet.ServletContext;
 
+public interface EventCreate {
+	public String createEventFromJSON(String jsonStr, ServletContext context);
 }
